@@ -3,6 +3,16 @@ SELECT
 concat((select p.pkey from project p where p.ID = a.project), "-", a.issuenum) as DDE_NUM, 
 a.CREATED,
 count(NEWSTRING) AS NB_VERSIONS
+,
+
+(SELECT i.NEWSTRING 
+FROM changeitem i, changegroup g
+WHERE g.id = i.groupid
+AND g.issueid  = a.id
+AND FIELD = "Story points"
+ORDER BY i.ID DESC
+LIMIT 1) AS STORY_POINTS
+
 FROM jiraissue a, changegroup b, changeitem c 
 WHERE a.id = b.issueid AND b.id = c.groupid
 AND FIELD = 'Fix Version'
