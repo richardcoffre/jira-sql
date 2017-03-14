@@ -2,6 +2,15 @@ SELECT
 (select i.pname from issuetype i where a.issuetype = i.id) AS DDE_TYPE,
 concat((select p.pkey from project p where p.ID = a.project), "-", a.issuenum) as DDE_NUM, 
 a.CREATED,
+
+(SELECT i.NEWSTRING 
+FROM changeitem i, changegroup g
+WHERE g.id = i.groupid
+AND g.issueid  = a.id
+AND FIELD = "resolution"
+ORDER BY i.ID DESC
+LIMIT 1) AS RESOLUTION,
+
 (SELECT COUNT(i.NEWSTRING) 
 FROM changeitem i, changegroup g
 WHERE g.id = i.groupid
